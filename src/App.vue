@@ -1,26 +1,27 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="app-container bg-dark text-white min-vh-100 p-4">
+    <h1 class="text-center mb-4">Поиск фильмов</h1>
+    <div class="d-flex gap-2 mb-4">
+      <input v-model="query" class="form-control" placeholder="Введите название фильма" />
+      <button @click="searchMovies" class="btn btn-primary">Искать</button>
+    </div>
+  </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
+<script setup>
+import { ref } from 'vue'
 
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
+const query = ref('')
+
+const searchMovies = () => {
+  console.log('Ищем фильм:', query.value)
+  // Здесь позже будет запрос к API
 }
 </script>
 
+
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+body {
+  margin: 0;
 }
 </style>
