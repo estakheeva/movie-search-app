@@ -7,18 +7,19 @@
     </div>
   </div>
 
-  <div v-if="error" class="alert alert-warning">{{ error }}</div>
+    <div v-if="error" class="alert alert-warning">{{ error }}</div>
     <div v-if="movies.length" class="row">
-      <div v-for="film in movies" :key="film.imdbID" class="col-md-4 mb-3">
+      <div v-for="film in movies" :key="film.filmId" class="col-md-4 mb-3">
         <div class="card bg-secondary text-white h-100">
           <img 
-            :src="film.Poster !== 'N/A' ? film.Poster : 'https://via.placeholder.com/300x450?text=No+Poster'" 
+            :src="film.posterUrlPreview || 'https://via.placeholder.com/300x450?text=No+Poster'" 
             class="card-img-top" 
-            :alt="film.Title" 
-            @error="e => e.target.src = 'https://via.placeholder.com/300x450?text=No+Poster'"/>
-           <div class="card-body">
-              <h5 class="card-title">{{ film.Title }}</h5>
-              <p class="card-text">{{ film.Year }}</p>
+            :alt="film.nameRu || film.nameEn"
+            @error="e => e.target.src = 'https://via.placeholder.com/300x450?text=No+Poster'"
+          />
+          <div class="card-body">
+            <h5 class="card-title">{{ film.nameRu || film.nameEn }}</h5>
+            <p class="card-text">{{ film.year }}</p>
           </div>
         </div>
       </div>
@@ -31,7 +32,7 @@ import { ref } from 'vue'
 const query = ref('')
 const movies = ref([])
 const error = ref('')
-const apiKey = '2f24d494'
+const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 
 const searchMovies = async () => {
   error.value = ''
@@ -40,16 +41,22 @@ const searchMovies = async () => {
   if (!query.value.trim()) return
   
   try {
-    const response = await fetch(`https://www.omdbapi.com/?apikey=${apiKey}&s=${query.value}`)
+    const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${query.value}`, {
+      headers: {
+        'X-API-KEY': apiKey,
+        'Content-Type': 'application/json'
+      }
+    })
     const data = await response.json()
     
-    if (data.Response === 'True') {
-      movies.value = data.Search
+    if (data.films && data.films.length > 0) {
+      movies.value = data.films
     } else {
-      error.value = data.Error || 'Ничего не найдено'
+      error.value = 'Ничего не найдено'
     }
   } catch (e) {
     error.value = 'Ошибка при загрузке данных'
+    console.error(e)
   }
 }
 </script>
