@@ -4,6 +4,7 @@
     <div class="d-flex gap-2 mb-4">
       <input v-model="query" class="form-control" placeholder="Введите название фильма" />
       <button @click="searchMovies" class="btn btn-primary">Искать</button>
+      <button @click="clearAll" class="btn btn-outline-light">Стереть</button>
     </div>
   </div>
 
@@ -58,6 +59,12 @@ const searchMovies = async () => {
     error.value = 'Ошибка при загрузке данных'
     console.error(e)
   }
+}
+
+const clearAll = () => {
+  query.value = ''
+  movies.value = []
+  error.value = ''
 }
 </script>
 
