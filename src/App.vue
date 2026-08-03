@@ -14,16 +14,32 @@
       <h4 class="text-warning">{{ error }}</h4>
       <p class="text-warning">Попробуйте изменить запрос или проверить название фильма</p>
     </div>
-    
+
+    <div v-if="loading" class="text-center py-5">
+      <div class="spinner-border text-warning" role="status">
+        <span class="visually-hidden">Загрузка...</span>
+      </div>
+      <p class="text-warning mt-2">Ищем фильмы...</p>
+    </div>
+
     <div v-if="movies.length" class="row">
       <div v-for="film in movies" :key="film.filmId" class="col-sm-4 col-lg-3 col-xl-2 mb-3">
         <div class="card bg-secondary text-white h-100">
           <img
-            :src="film.posterUrlPreview || 'https://via.placeholder.com/300x450?text=No+Poster'"
+            v-if="film.posterUrlPreview"
+            :src="film.posterUrlPreview"
             class="card-img-top"
             :alt="film.nameRu || film.nameEn"
-            @error="e => e.target.src = 'https://via.placeholder.com/300x450?text=No+Poster'"
+            @error="e => e.target.style.display = 'none'"
           />
+          <div
+            v-if="!film.posterUrlPreview || !film.posterUrlPreview.length"
+            class="card-img-top d-flex align-items-center justify-content-center bg-secondary text-white"
+            style="height: 200px;"
+            >
+            <span>Нет постера</span>
+          </div>
+          
           <div class="card-body">
             <h5 class="card-title">{{ film.nameRu || film.nameEn }}</h5>
             <p class="card-text">{{ film.year }}</p>
@@ -40,6 +56,7 @@ import { ref } from 'vue'
 const query = ref('')
 const movies = ref([])
 const error = ref('')
+const loading = ref(false)
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 
 const searchMovies = async () => {
@@ -47,6 +64,8 @@ const searchMovies = async () => {
   movies.value = []
   
   if (!query.value.trim()) return
+
+  loading.value = true
   
   try {
     const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${query.value}`, {
@@ -65,6 +84,8 @@ const searchMovies = async () => {
   } catch (e) {
     error.value = 'Ошибка при загрузке данных'
     console.error(e)
+  } finally {
+    loading.value = false
   }
 }
 
