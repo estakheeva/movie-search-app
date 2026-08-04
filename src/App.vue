@@ -45,6 +45,11 @@
         </div>
       </div>
     </div>
+
+    <div v-if="movies.length" class="text-center mt-4">
+      <button @click="loadMore" class="btn btn-outline-light">Показать ещё</button>
+    </div>
+    
   </div>
 </template>
 
@@ -55,12 +60,14 @@ const query = ref('')
 const movies = ref([])
 const error = ref('')
 const loading = ref(false)
+const page = ref(1)
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 
 const searchMovies = async () => {
   error.value = ''
   movies.value = []
-  
+  page.value = 1 
+
   if (!query.value.trim()) return
   
   loading.value = true
@@ -81,6 +88,29 @@ const searchMovies = async () => {
     }
   } catch (e) {
     error.value = 'Ошибка при загрузке данных'
+    console.error(e)
+  } finally {
+    loading.value = false
+  }
+}
+const loadMore = async () => {
+  page.value++
+  loading.value = true
+  
+  try {
+    const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${query.value}&page=${page.value}`, {
+      headers: {
+        'X-API-KEY': apiKey,
+        'Content-Type': 'application/json'
+      }
+    })
+    const data = await response.json()
+    
+    if (data.films && data.films.length > 0) {
+      movies.value = [...movies.value, ...data.films]
+    }
+  } catch (e) {
+    error.value = 'Ошибка при загрузке'
     console.error(e)
   } finally {
     loading.value = false
