@@ -1,32 +1,11 @@
 <template>
   <div class="bg-dark text-white min-vh-100 p-4">
-    <div class="app-container">
-      <h1 class="text-center mb-4">Поиск фильмов</h1>
-      <div class="row g-2 mb-4 justify-content-center">
-        <div class="col-12 col-md-6">
-          <input v-model="query" @keyup.enter="searchMovies" class="form-control" placeholder="Введите название фильма" />
-        </div>
-        <div class="col-6 col-md-auto">
-          <button @click="searchMovies" class="btn btn-primary w-100">Искать</button>
-        </div>
-        <div class="col-6 col-md-auto">
-          <button @click="clearAll" class="btn btn-outline-light w-100">Стереть</button>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="loading" class="text-center py-5">
-      <div class="spinner-border text-warning" role="status">
-        <span class="visually-hidden">Загрузка...</span>
-      </div>
-      <p class="text-warning mt-2">Ищем фильмы...</p>
-    </div>
-
-    <div v-if="error" class="text-center py-5">
-      <div class="mb-3" style="font-size: 48px;">🎬</div>
-      <h4 class="text-warning">{{ error }}</h4>
-      <p class="text-warning">Попробуйте изменить запрос или проверить название фильма</p>
-    </div>
+    <SearchBar
+      :loading="loading"
+      :error="error"
+      @search="onSearch"
+      @clear="onClear"
+    />
 
     <div v-if="movies.length" class="row">
       <div v-for="film in movies" :key="film.filmId" class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3">
@@ -37,11 +16,7 @@
             class="card-img-top"
             :alt="film.nameRu || film.nameEn"
           />
-          <div
-            v-else
-            class="card-img-top d-flex align-items-center justify-content-center bg-dark text-light"
-            style="height: 200px;"
-          >
+          <div v-else class="card-img-top d-flex align-items-center justify-content-center bg-dark text-light" style="height: 200px;">
             <span>Нет постера</span>
           </div>
           <div class="card-body">
@@ -55,38 +30,41 @@
     <div v-if="movies.length" class="text-center mt-4">
       <button @click="loadMore" class="btn btn-outline-light">Показать ещё</button>
     </div>
-
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import SearchBar from './components/SearchBar.vue'
 
-const query = ref('')
 const movies = ref([])
-const error = ref('')
 const loading = ref(false)
+const error = ref('')
 const page = ref(1)
+const currentQuery = ref('')
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 
-const searchMovies = async () => {
+const fetchMovies = async (query, pageNum) => {
+  const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${query}&page=${pageNum}`, {
+    headers: {
+      'X-API-KEY': apiKey,
+      'Content-Type': 'application/json'
+    }
+  })
+  return response.json()
+}
+
+const onSearch = async (query) => {
   error.value = ''
   movies.value = []
-  page.value = 1 
+  page.value = 1
+  currentQuery.value = query
 
-  if (!query.value.trim()) return
-  
+  if (!query.trim()) return
+
   loading.value = true
-  
   try {
-    const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${query.value}`, {
-      headers: {
-        'X-API-KEY': apiKey,
-        'Content-Type': 'application/json'
-      }
-    })
-    const data = await response.json()
-    
+    const data = await fetchMovies(query, 1)
     if (data.films && data.films.length > 0) {
       movies.value = data.films
     } else {
@@ -94,39 +72,31 @@ const searchMovies = async () => {
     }
   } catch (e) {
     error.value = 'Ошибка при загрузке данных'
-    console.error(e)
-  } finally {
-    loading.value = false
-  }
-}
-const loadMore = async () => {
-  page.value++
-  loading.value = true
-  
-  try {
-    const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${query.value}&page=${page.value}`, {
-      headers: {
-        'X-API-KEY': apiKey,
-        'Content-Type': 'application/json'
-      }
-    })
-    const data = await response.json()
-    
-    if (data.films && data.films.length > 0) {
-      movies.value = [...movies.value, ...data.films]
-    }
-  } catch (e) {
-    error.value = 'Ошибка при загрузке'
-    console.error(e)
   } finally {
     loading.value = false
   }
 }
 
-const clearAll = () => {
-  query.value = ''
+const loadMore = async () => {
+  page.value++
+  loading.value = true
+  try {
+    const data = await fetchMovies(currentQuery.value, page.value)
+    if (data.films && data.films.length > 0) {
+      movies.value = [...movies.value, ...data.films]
+    }
+  } catch (e) {
+    error.value = 'Ошибка при загрузке'
+  } finally {
+    loading.value = false
+  }
+}
+
+const onClear = () => {
   movies.value = []
   error.value = ''
+  page.value = 1
+  currentQuery.value = ''
 }
 </script>
 
