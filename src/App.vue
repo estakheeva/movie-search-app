@@ -2,10 +2,16 @@
   <div class="bg-dark text-white min-vh-100 p-4">
     <div class="app-container">
       <h1 class="text-center mb-4">Поиск фильмов</h1>
-      <div class="d-flex gap-2 mb-4">
-        <input v-model="query" @keyup.enter="searchMovies" class="form-control" placeholder="Введите название фильма" />
-        <button @click="searchMovies" class="btn btn-primary">Искать</button>
-        <button @click="clearAll" class="btn btn-outline-light">Стереть</button>
+      <div class="row g-2 mb-4 justify-content-center">
+        <div class="col-12 col-md-6">
+          <input v-model="query" @keyup.enter="searchMovies" class="form-control" placeholder="Введите название фильма" />
+        </div>
+        <div class="col-6 col-md-auto">
+          <button @click="searchMovies" class="btn btn-primary w-100">Искать</button>
+        </div>
+        <div class="col-6 col-md-auto">
+          <button @click="clearAll" class="btn btn-outline-light w-100">Стереть</button>
+        </div>
       </div>
     </div>
 
@@ -23,8 +29,8 @@
     </div>
 
     <div v-if="movies.length" class="row">
-      <div v-for="film in movies" :key="film.filmId" class="col-sm-4 col-lg-3 col-xl-2 mb-3">
-        <div class="card bg-secondary text-white h-100">o
+      <div v-for="film in movies" :key="film.filmId" class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3">
+        <div class="card bg-secondary text-white h-100">
           <img
             v-if="film.posterUrlPreview && !film.posterUrlPreview.includes('no-poster')"
             :src="film.posterUrlPreview"
