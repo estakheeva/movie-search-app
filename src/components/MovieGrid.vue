@@ -1,7 +1,7 @@
 <template>
   <div v-if="movies.length" class="row">
     <div v-for="film in movies" :key="film.filmId" class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3">
-      <div class="card bg-secondary text-white h-100">
+      <div class="card bg-secondary text-white h-100" @click="$emit('filmClick', film.filmId)" style="cursor: pointer;">
         <img
           v-if="film.posterUrlPreview && !film.posterUrlPreview.includes('no-poster')"
           :src="film.posterUrlPreview"
@@ -21,7 +21,11 @@
 </template>
 
 <script setup>
+// eslint-disable-next-line no-undef
 defineProps({
   movies: Array
 })
+
+// eslint-disable-next-line no-undef
+defineEmits(['filmClick'])
 </script>
