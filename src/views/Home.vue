@@ -33,7 +33,7 @@
     </div>
 
     <div v-if="activeTab === 'favorites'">
-      <FavoritesGrid :favorites="favorites" />
+      <FavoritesGrid :favorites="favorites" @toggleFavorite="toggleFavorite" />
     </div>
   </div>
 </template>

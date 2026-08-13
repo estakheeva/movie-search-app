@@ -1,7 +1,13 @@
 <template>
   <div v-if="favorites.length" class="row">
     <div v-for="film in favorites" :key="film.filmId" class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3">
-      <div class="card bg-secondary text-white h-100">
+      <div class="card bg-secondary text-white h-100" style="position: relative;">
+        <button
+          @click.stop="$emit('toggleFavorite', film)"
+          class="btn btn-sm btn-dark position-absolute top-0 end-0 m-2"
+        >
+          ★
+        </button>
         <img
           v-if="film.posterUrlPreview && !film.posterUrlPreview.includes('no-poster')"
           :src="film.posterUrlPreview"
@@ -28,4 +34,7 @@
 defineProps({
   favorites: Array
 })
+
+// eslint-disable-next-line no-undef
+defineEmits(['toggleFavorite'])
 </script>
