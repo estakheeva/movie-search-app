@@ -7,7 +7,12 @@
       @clear="onClear"
     />
 
-    <MovieGrid :movies="movies" @filmClick="goToFilm" />
+    <MovieGrid
+      :movies="movies"
+      :favorites="favorites"
+      @filmClick="goToFilm"
+      @toggleFavorite="toggleFavorite"
+    />
 
     <div v-if="movies.length" class="text-center mt-4">
       <button @click="loadMore" class="btn btn-outline-light">Показать ещё</button>
@@ -29,6 +34,16 @@ const page = ref(1)
 const currentQuery = ref('')
 const router = useRouter()
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
+const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
+
+const toggleFavorite = (id) => {
+  if (favorites.value.includes(id)) {
+    favorites.value = favorites.value.filter(fav => fav !== id)
+  } else {
+    favorites.value.push(id)
+  }
+  localStorage.setItem('favorites', JSON.stringify(favorites.value))
+}
 
 const fetchMovies = async (query, pageNum) => {
   const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${query}&page=${pageNum}`, {
