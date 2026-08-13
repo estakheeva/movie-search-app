@@ -1,0 +1,31 @@
+<template>
+  <div v-if="favorites.length" class="row">
+    <div v-for="film in favorites" :key="film.filmId" class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3">
+      <div class="card bg-secondary text-white h-100">
+        <img
+          v-if="film.posterUrlPreview && !film.posterUrlPreview.includes('no-poster')"
+          :src="film.posterUrlPreview"
+          class="card-img-top"
+          :alt="film.nameRu || film.nameEn"
+        />
+        <div v-else class="card-img-top d-flex align-items-center justify-content-center bg-dark text-light" style="height: 200px;">
+          <span>Нет постера</span>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">{{ film.nameRu || film.nameEn }}</h5>
+          <p class="card-text">{{ film.year }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else class="text-center py-5">
+    <h4 class="text-warning">В избранном пока пусто</h4>
+  </div>
+</template>
+
+<script setup>
+// eslint-disable-next-line no-undef
+defineProps({
+  favorites: Array
+})
+</script>

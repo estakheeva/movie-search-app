@@ -1,21 +1,39 @@
 <template>
   <div class="bg-dark text-white min-vh-100 p-4">
-    <SearchBar
-      :loading="loading"
-      :error="error"
-      @search="onSearch"
-      @clear="onClear"
-    />
+    <div class="d-flex justify-content-center mb-4">
+      <button
+        @click="activeTab = 'search'"
+        class="btn me-2"
+        :class="activeTab === 'search' ? 'btn-primary' : 'btn-outline-light'"
+      >
+        Поиск
+      </button>
+      <button
+        @click="activeTab = 'favorites'"
+        class="btn"
+        :class="activeTab === 'favorites' ? 'btn-primary' : 'btn-outline-light'"
+      >
+        Избранное
+      </button>
+    </div>
 
-    <MovieGrid
-      :movies="movies"
-      :favorites="favorites"
-      @filmClick="goToFilm"
-      @toggleFavorite="toggleFavorite"
-    />
+    <div v-if="activeTab === 'search'">
+      <SearchBar
+        :loading="loading"
+        :error="error"
+        @search="onSearch"
+        @clear="onClear"
+      />
 
-    <div v-if="movies.length" class="text-center mt-4">
-      <button @click="loadMore" class="btn btn-outline-light">Показать ещё</button>
+      <MovieGrid :movies="movies" :favorites="favorites" @filmClick="goToFilm" @toggleFavorite="toggleFavorite" />
+
+      <div v-if="movies.length" class="text-center mt-4">
+        <button @click="loadMore" class="btn btn-outline-light">Показать ещё</button>
+      </div>
+    </div>
+
+    <div v-if="activeTab === 'favorites'">
+      <FavoritesGrid :favorites="favorites" />
     </div>
   </div>
 </template>
@@ -24,6 +42,7 @@
 import { ref } from 'vue'
 import SearchBar from '../components/SearchBar.vue'
 import MovieGrid from '../components/MovieGrid.vue'
+import FavoritesGrid from '../components/FavoritesGrid.vue'
 import { useRouter } from 'vue-router'
 
 
@@ -35,12 +54,14 @@ const currentQuery = ref('')
 const router = useRouter()
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
+const activeTab = ref('search')
 
-const toggleFavorite = (id) => {
-  if (favorites.value.includes(id)) {
-    favorites.value = favorites.value.filter(fav => fav !== id)
+const toggleFavorite = (film) => {
+  const isFavorite = favorites.value.some(fav => fav.filmId === film.filmId)
+  if (isFavorite) {
+    favorites.value = favorites.value.filter(fav => fav.filmId !== film.filmId)
   } else {
-    favorites.value.push(id)
+    favorites.value.push(film)
   }
   localStorage.setItem('favorites', JSON.stringify(favorites.value))
 }

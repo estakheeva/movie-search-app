@@ -3,10 +3,10 @@
     <div v-for="film in movies" :key="film.filmId" class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3">
       <div class="card bg-secondary text-white h-100" style="position: relative;">
         <button
-          @click.stop="$emit('toggleFavorite', film.filmId)"
+          @click.stop="$emit('toggleFavorite', film)"
           class="btn btn-sm btn-dark position-absolute top-0 end-0 m-2"
         >
-          {{ favorites.includes(film.filmId) ? '★' : '☆' }}
+          {{ favorites.some(fav => fav.filmId === film.filmId) ? '★' : '☆' }}
         </button>
         <div @click="$emit('filmClick', film.filmId)" style="cursor: pointer;">
           <img
