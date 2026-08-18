@@ -1,39 +1,65 @@
 <template>
-  <div class="bg-dark text-white min-vh-100 p-4">
+    <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
+    
     <div class="d-flex justify-content-center mb-4">
+      <button @click="toggleTheme" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
+          {{ isDark ? 'Светлая тема' : 'Тёмная тема' }}
+      </button>
+    </div>
+    
+        <div class="d-flex justify-content-center mb-4">
       <button
         @click="activeTab = 'search'"
         class="btn me-2"
-        :class="activeTab === 'search' ? 'btn-primary' : 'btn-outline-light'"
+        :class="[
+          activeTab === 'search' ? 'btn-primary' : '',
+          isDark ? 'text-white' : 'text-dark border'
+        ]"
       >
         Поиск
       </button>
       <button
         @click="activeTab = 'favorites'"
         class="btn"
-        :class="activeTab === 'favorites' ? 'btn-primary' : 'btn-outline-light'"
+        :class="[
+          activeTab === 'favorites' ? 'btn-primary' : '',
+          isDark ? 'text-white' : 'text-dark border'
+        ]"
       >
         Избранное
       </button>
     </div>
-
     <div v-if="activeTab === 'search'">
       <SearchBar
         :loading="loading"
         :error="error"
         @search="onSearch"
         @clear="onClear"
+        :isDark="isDark"
       />
 
-      <MovieGrid :movies="movies" :favorites="favorites" @filmClick="goToFilm" @toggleFavorite="toggleFavorite" />
+      <MovieGrid 
+        :movies="movies" 
+        :favorites="favorites" 
+        @filmClick="goToFilm" 
+        @toggleFavorite="toggleFavorite" 
+        :isDark="isDark"
+      />
 
       <div v-if="movies.length" class="text-center mt-4">
-        <button @click="loadMore" class="btn btn-outline-light">Показать ещё</button>
+        <button @click="loadMore" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
+          Показать ещё
+        </button>
       </div>
     </div>
 
     <div v-if="activeTab === 'favorites'">
-      <FavoritesGrid :favorites="favorites" @toggleFavorite="toggleFavorite" />
+      <FavoritesGrid 
+      :favorites="favorites" 
+      @toggleFavorite="toggleFavorite" 
+      :isDark="isDark"
+    />
+
     </div>
   </div>
 </template>
@@ -55,6 +81,12 @@ const router = useRouter()
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
 const activeTab = ref('search')
+const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
+
+const toggleTheme = () => {
+  isDark.value = !isDark.value
+  localStorage.setItem('isDark', JSON.stringify(isDark.value))
+}
 
 const toggleFavorite = (film) => {
   const isFavorite = favorites.value.some(fav => fav.filmId === film.filmId)

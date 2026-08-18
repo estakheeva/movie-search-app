@@ -1,9 +1,12 @@
 <template>
-  <div class="bg-dark text-white min-vh-100 p-4">
-    <button @click="$router.back()" class="btn btn-outline-light mb-4">← Назад</button>
+  <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
+    
+    <button @click="$router.back()" class="btn mb-4" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">← Назад</button>
+    
     <div v-if="loading" class="text-center py-5">
       <div class="spinner-border text-warning"></div>
     </div>
+    
     <div v-if="film" class="row">
       <div class="col-md-4 mb-3">
         <img
@@ -15,6 +18,7 @@
           <span class="text-light">Нет постера</span>
         </div>
       </div>
+      
       <div class="col-md-8">
         <h2>{{ film.nameRu || film.nameEn }}</h2>
         <p class="text-muted">{{ film.year }} • {{ film.genres?.map(g => g.genre).join(', ') }}</p>
@@ -34,6 +38,7 @@ const route = useRoute()
 const film = ref(null)
 const loading = ref(true)
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
+const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
 
 onMounted(async () => {
   try {

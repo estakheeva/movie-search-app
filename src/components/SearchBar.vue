@@ -10,7 +10,7 @@
         <button @click="$emit('search', query)" class="btn btn-primary w-100">Искать</button>
       </div>
       <div class="col-6 col-md-auto">
-        <button @click="clear" class="btn btn-outline-light w-100">Стереть</button>
+        <button @click="clear" class="btn w-100" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">Стереть</button>
       </div>
     </div>
 
@@ -33,7 +33,8 @@ import { ref } from 'vue'
 // eslint-disable-next-line no-undef
 defineProps({
   loading: Boolean,
-  error: String
+  error: String,
+  isDark: Boolean
 })
 
 // eslint-disable-next-line no-undef
