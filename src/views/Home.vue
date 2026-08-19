@@ -1,13 +1,18 @@
 <template>
     <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
     
-    <div class="d-flex justify-content-center mb-4">
+    <div class="d-flex justify-content-center gap-2 mb-4">
+      
       <button @click="toggleTheme" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-          {{ isDark ? 'Светлая тема' : 'Тёмная тема' }}
+        {{ isDark ? 'Светлая тема' : 'Тёмная тема' }}
+      </button>
+      
+      <button @click="$router.push('/about')" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
+        О проекте
       </button>
     </div>
     
-        <div class="d-flex justify-content-center mb-4">
+    <div class="d-flex justify-content-center mb-4">
       <button
         @click="activeTab = 'search'"
         class="btn me-2"
@@ -18,6 +23,7 @@
       >
         Поиск
       </button>
+      
       <button
         @click="activeTab = 'favorites'"
         class="btn"
