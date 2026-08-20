@@ -1,7 +1,11 @@
 <template>
   <div v-if="favorites.length" class="row">
     <div v-for="film in favorites" :key="film.filmId" class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3">
-      <div class="card h-100" :class="isDark ? 'bg-secondary text-white' : 'bg-white text-dark border'" style="position: relative;">
+      <div 
+        class="card h-100" 
+        :class="isDark ? 'bg-secondary text-white' : 'bg-white text-dark border'" 
+        style="position: relative; cursor: pointer;"
+         @click="$emit('filmClick', film.filmId)">
         <button
           @click.stop="$emit('toggleFavorite', film)"
           class="btn btn-sm position-absolute top-0 end-0 m-2"
@@ -38,5 +42,5 @@ defineProps({
 })
 
 // eslint-disable-next-line no-undef
-defineEmits(['toggleFavorite'])
+defineEmits(['toggleFavorite', 'filmClick'])
 </script>

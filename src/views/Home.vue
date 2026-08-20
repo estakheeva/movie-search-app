@@ -11,7 +11,7 @@
 
     <div class="d-flex justify-content-center mb-4">
       <button
-        @click="activeTab = 'search'"
+        @click="setActiveTab('search')"
         class="btn me-2"
         :class="[
           activeTab === 'search' ? 'btn-primary' : '',
@@ -21,7 +21,7 @@
         Поиск
       </button>
       <button
-        @click="activeTab = 'favorites'"
+        @click="setActiveTab('favorites')"
         class="btn"
         :class="[
           activeTab === 'favorites' ? 'btn-primary' : '',
@@ -59,6 +59,7 @@
         :favorites="favorites"
         @toggleFavorite="toggleFavorite"
         :isDark="isDark"
+        @filmClick="goToFilm"
       />
     </div>
   </div>
@@ -79,8 +80,14 @@ const page = ref(1)
 const currentQuery = ref('')
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
-const activeTab = ref('search')
 const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
+const activeTab = ref('search')
+const savedTab = sessionStorage.getItem('lastTab')
+
+if (savedTab) {
+  activeTab.value = savedTab
+  sessionStorage.removeItem('lastTab')
+}
 
 const saveSearchState = (films, query) => {
   sessionStorage.setItem('lastMovies', JSON.stringify(films))
@@ -104,6 +111,11 @@ const clearSearchState = () => {
 }
 
 restoreSearchState()
+
+const setActiveTab = (tab) => {
+  activeTab.value = tab
+  sessionStorage.setItem('lastTab', tab)
+}
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
