@@ -20,7 +20,7 @@
           </div>
           <div class="card-body">
             <h5 class="card-title">{{ film.nameRu || film.nameEn }}</h5>
-            <p class="card-text">{{ film.year }}</p>
+            <p class="card-text">{{ film.year || 'Год не указан'}}</p>
           </div>
         </div>
       </div>
