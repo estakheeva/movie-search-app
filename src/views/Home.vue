@@ -1,17 +1,14 @@
 <template>
-    <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
-    
+  <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
     <div class="d-flex justify-content-center gap-2 mb-4">
-      
       <button @click="toggleTheme" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-        {{ isDark ? 'Светлая тема' : 'Тёмная тема' }}
+          {{ isDark ? 'Светлая тема' : 'Тёмная тема' }}
       </button>
-      
       <button @click="$router.push('/about')" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-        О проекте
+          О проекте
       </button>
     </div>
-    
+
     <div class="d-flex justify-content-center mb-4">
       <button
         @click="activeTab = 'search'"
@@ -23,7 +20,6 @@
       >
         Поиск
       </button>
-      
       <button
         @click="activeTab = 'favorites'"
         class="btn"
@@ -35,59 +31,79 @@
         Избранное
       </button>
     </div>
+
     <div v-if="activeTab === 'search'">
       <SearchBar
         :loading="loading"
         :error="error"
+        :isDark="isDark"
         @search="onSearch"
         @clear="onClear"
-        :isDark="isDark"
       />
 
-      <MovieGrid 
-        :movies="movies" 
-        :favorites="favorites" 
-        @filmClick="goToFilm" 
-        @toggleFavorite="toggleFavorite" 
+      <MovieGrid
+        :movies="movies"
+        :favorites="favorites"
+        @filmClick="goToFilm"
+        @toggleFavorite="toggleFavorite"
         :isDark="isDark"
       />
 
       <div v-if="movies.length" class="text-center mt-4">
-        <button @click="loadMore" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-          Показать ещё
-        </button>
+        <button @click="loadMore" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">Показать ещё</button>
       </div>
     </div>
 
     <div v-if="activeTab === 'favorites'">
-      <FavoritesGrid 
-      :favorites="favorites" 
-      @toggleFavorite="toggleFavorite" 
-      :isDark="isDark"
-    />
-
+      <FavoritesGrid
+        :favorites="favorites"
+        @toggleFavorite="toggleFavorite"
+        :isDark="isDark"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import SearchBar from '../components/SearchBar.vue'
 import MovieGrid from '../components/MovieGrid.vue'
 import FavoritesGrid from '../components/FavoritesGrid.vue'
-import { useRouter } from 'vue-router'
 
-
+const router = useRouter()
 const movies = ref([])
 const loading = ref(false)
 const error = ref('')
 const page = ref(1)
 const currentQuery = ref('')
-const router = useRouter()
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
 const activeTab = ref('search')
 const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
+
+const saveSearchState = (films, query) => {
+  sessionStorage.setItem('lastMovies', JSON.stringify(films))
+  sessionStorage.setItem('lastQuery', query)
+}
+
+const restoreSearchState = () => {
+  const savedMovies = sessionStorage.getItem('lastMovies')
+  const savedQuery = sessionStorage.getItem('lastQuery')
+
+  if (savedMovies) movies.value = JSON.parse(savedMovies)
+  if (savedQuery) currentQuery.value = savedQuery
+
+  sessionStorage.removeItem('lastMovies')
+  sessionStorage.removeItem('lastQuery')
+}
+
+const clearSearchState = () => {
+  sessionStorage.removeItem('lastMovies')
+  sessionStorage.removeItem('lastQuery')
+}
+
+restoreSearchState()
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
@@ -127,6 +143,7 @@ const onSearch = async (query) => {
     const data = await fetchMovies(query, 1)
     if (data.films && data.films.length > 0) {
       movies.value = data.films
+      saveSearchState(data.films, query)
     } else {
       error.value = 'Ничего не найдено'
     }
@@ -144,6 +161,7 @@ const loadMore = async () => {
     const data = await fetchMovies(currentQuery.value, page.value)
     if (data.films && data.films.length > 0) {
       movies.value = [...movies.value, ...data.films]
+      saveSearchState(movies.value, currentQuery.value)
     }
   } catch (e) {
     error.value = 'Ошибка при загрузке'
@@ -152,15 +170,16 @@ const loadMore = async () => {
   }
 }
 
-const goToFilm = (id) => {
-  router.push(`/movie/${id}`)
-}
-
 const onClear = () => {
   movies.value = []
   error.value = ''
   page.value = 1
   currentQuery.value = ''
+  clearSearchState()
+}
+
+const goToFilm = (id) => {
+  router.push(`/movie/${id}`)
 }
 </script>
 
