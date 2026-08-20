@@ -20,21 +20,25 @@
           :alt="film.nameRu || film.nameEn"
         />
         <div v-else class="card-img-top d-flex align-items-center justify-content-center" :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'" style="height: 200px;">
-          <span>Нет постера</span>
+          <span>{{ t('noPoster') }}</span>
         </div>
         <div class="card-body">
           <h5 class="card-title">{{ film.nameRu || film.nameEn }}</h5>
-          <p class="card-text">{{ film.year }}</p>
+          <p class="card-text">{{ film.year || t('yearNotSpecified') }}</p>
         </div>
       </div>
     </div>
   </div>
   <div v-else class="text-center py-5">
-    <h4 :class="isDark ? 'text-warning' : 'text-muted'">В избранном пока пусто</h4>
+    <h4 :class="isDark ? 'text-warning' : 'text-muted'">{{ t('favoritesEmpty') }}</h4>
   </div>
 </template>
 
 <script setup>
+import { useLocale } from '../composables/useLocale'
+
+const { t } = useLocale()
+
 // eslint-disable-next-line no-undef
 defineProps({
   favorites: Array,

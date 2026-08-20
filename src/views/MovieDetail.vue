@@ -1,10 +1,12 @@
 <template>
   <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
     
-    <button @click="$router.back()" class="btn mb-4" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">← Назад</button>
+    <button @click="$router.back()" class="btn mb-4" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">{{ t('back') }}</button>
     
     <div v-if="loading" class="text-center py-5">
-      <div class="spinner-border text-warning"></div>
+      <div class="spinner-border text-warning">
+        <p class="text-warning mt-2">{{ t('loading') }}</p>
+      </div>
     </div>
     
     <div v-if="film" class="row">
@@ -15,7 +17,7 @@
           class="img-fluid rounded"
         />
         <div v-else class="bg-secondary d-flex align-items-center justify-content-center rounded" style="height: 400px;">
-          <span class="text-light">Нет постера</span>
+          <span class="text-light">{{ t('noPoster') }}</span>
         </div>
       </div>
       
@@ -33,12 +35,14 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useLocale } from '../composables/useLocale'
 
 const route = useRoute()
 const film = ref(null)
 const loading = ref(true)
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
+const { t } = useLocale()
 
 onMounted(async () => {
   try {

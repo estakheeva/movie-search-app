@@ -2,10 +2,10 @@
   <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
     <div class="d-flex justify-content-center gap-2 mb-4">
       <button @click="toggleTheme" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-          {{ isDark ? 'Светлая тема' : 'Тёмная тема' }}
+          {{ isDark ? t('lightTheme') : t('darkTheme') }}
       </button>
       <button @click="$router.push('/about')" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-          О проекте
+          {{ t('aboutProject') }}
       </button>
       <button 
         @click="setLocale(currentLocale === 'ru' ? 'en' : 'ru')" 
@@ -24,7 +24,7 @@
           isDark ? 'text-white' : 'text-dark border'
         ]"
       >
-        Поиск
+        {{ t('search') }}
       </button>
       <button
         @click="setActiveTab('favorites')"
@@ -34,7 +34,7 @@
           isDark ? 'text-white' : 'text-dark border'
         ]"
       >
-        Избранное
+        {{ t('favorites') }}
       </button>
     </div>
 
@@ -56,7 +56,7 @@
       />
 
       <div v-if="movies.length" class="text-center mt-4">
-        <button @click="loadMore" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">Показать ещё</button>
+        <button @click="loadMore" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">{{ t('loadMore') }}</button>
       </div>
     </div>
 
@@ -91,6 +91,7 @@ const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
 const activeTab = ref('search')
 const savedTab = sessionStorage.getItem('lastTab')
 const { currentLocale, setLocale } = useLocale()
+const { t } = useLocale()
 
 if (savedTab) {
   activeTab.value = savedTab

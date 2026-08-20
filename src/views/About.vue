@@ -2,16 +2,16 @@
   <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
     <div class="app-container">
       <button @click="$router.back()" class="btn mb-4" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-        ← Назад
+        {{ t('back') }}
       </button>
 
-      <h1 class="mb-3">О проекте</h1>
+      <h1 class="mb-3">{{ t('aboutTitle') }}</h1>
 
       <p class="lead">
-        Movie Search — учебный проект для поиска фильмов по названию.
+        {{ t('aboutLead') }}
       </p>
 
-      <h4 class="mt-4">Что умеет:</h4>
+      <h4 class="mt-4">{{ t('whatItCan') }}</h4>
       <ul>
         <li>Поиск фильмов через API Кинопоиска</li>
         <li>Пагинация (кнопка «Показать ещё»)</li>
@@ -20,7 +20,7 @@
         <li>Переключение тёмной и светлой темы</li>
       </ul>
 
-      <h4 class="mt-4">Технологии:</h4>
+      <h4 class="mt-4">{{ t('technologies') }}</h4>
       <ul>
         <li>Vue 3 (Composition API)</li>
         <li>Vue Router</li>
@@ -35,6 +35,8 @@
 
 <script setup>
 import { ref } from 'vue'
+import { useLocale } from '../composables/useLocale'
 
 const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
+const { t } = useLocale()
 </script>
