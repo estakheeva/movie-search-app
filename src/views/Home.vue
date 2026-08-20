@@ -7,6 +7,12 @@
       <button @click="$router.push('/about')" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
           О проекте
       </button>
+      <button 
+        @click="setLocale(currentLocale === 'ru' ? 'en' : 'ru')" 
+        class="btn" 
+        :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
+          {{ currentLocale === 'ru' ? 'EN' : 'RU' }}
+      </button>
     </div>
 
     <div class="d-flex justify-content-center mb-4">
@@ -68,6 +74,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useLocale } from '../composables/useLocale'
 import SearchBar from '../components/SearchBar.vue'
 import MovieGrid from '../components/MovieGrid.vue'
 import FavoritesGrid from '../components/FavoritesGrid.vue'
@@ -83,6 +90,7 @@ const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
 const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
 const activeTab = ref('search')
 const savedTab = sessionStorage.getItem('lastTab')
+const { currentLocale, setLocale } = useLocale()
 
 if (savedTab) {
   activeTab.value = savedTab
