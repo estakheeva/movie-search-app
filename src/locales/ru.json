@@ -20,5 +20,6 @@
   "aboutLead": "Movie Search — учебный проект для поиска фильмов по названию.",
   "whatItCan": "Что умеет:",
   "technologies": "Технологии:",
-  "errorLoading": "Ошибка при загрузке данных"
+  "errorLoading": "Ошибка при загрузке данных",
+  "collections": "Подборки"
 }

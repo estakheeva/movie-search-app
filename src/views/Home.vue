@@ -1,43 +1,5 @@
 <template>
   <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
-    <div class="d-flex justify-content-center gap-2 mb-4">
-      <button @click="toggleTheme" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-          {{ isDark ? t('lightTheme') : t('darkTheme') }}
-      </button>
-      <button @click="$router.push('/about')" class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-          {{ t('aboutProject') }}
-      </button>
-      <button 
-        @click="setLocale(currentLocale === 'ru' ? 'en' : 'ru')" 
-        class="btn" 
-        :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">
-          {{ currentLocale === 'ru' ? 'EN' : 'RU' }}
-      </button>
-    </div>
-
-    <div class="d-flex justify-content-center mb-4">
-      <button
-        @click="setActiveTab('search')"
-        class="btn me-2"
-        :class="[
-          activeTab === 'search' ? 'btn-primary' : '',
-          isDark ? 'text-white' : 'text-dark border'
-        ]"
-      >
-        {{ t('search') }}
-      </button>
-      <button
-        @click="setActiveTab('favorites')"
-        class="btn"
-        :class="[
-          activeTab === 'favorites' ? 'btn-primary' : '',
-          isDark ? 'text-white' : 'text-dark border'
-        ]"
-      >
-        {{ t('favorites') }}
-      </button>
-    </div>
-
     <div v-if="activeTab === 'search'">
       <SearchBar
         :loading="loading"
@@ -45,6 +7,7 @@
         :isDark="isDark"
         @search="onSearch"
         @clear="onClear"
+        :initialQuery="currentQuery"
       />
 
       <MovieGrid
@@ -75,11 +38,15 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useLocale } from '../composables/useLocale'
+import { useTabs } from '../composables/useTabs'
+import { useTheme } from '../composables/useTheme'
 import SearchBar from '../components/SearchBar.vue'
 import MovieGrid from '../components/MovieGrid.vue'
 import FavoritesGrid from '../components/FavoritesGrid.vue'
 
+const { t } = useLocale()
 const router = useRouter()
+
 const movies = ref([])
 const loading = ref(false)
 const error = ref('')
@@ -87,16 +54,8 @@ const page = ref(1)
 const currentQuery = ref('')
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
-const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
-const activeTab = ref('search')
-const savedTab = sessionStorage.getItem('lastTab')
-const { currentLocale, setLocale } = useLocale()
-const { t } = useLocale()
-
-if (savedTab) {
-  activeTab.value = savedTab
-  sessionStorage.removeItem('lastTab')
-}
+const { isDark } = useTheme()
+const { activeTab, setActiveTab } = useTabs()
 
 const saveSearchState = (films, query) => {
   sessionStorage.setItem('lastMovies', JSON.stringify(films))
@@ -109,9 +68,6 @@ const restoreSearchState = () => {
 
   if (savedMovies) movies.value = JSON.parse(savedMovies)
   if (savedQuery) currentQuery.value = savedQuery
-
-  sessionStorage.removeItem('lastMovies')
-  sessionStorage.removeItem('lastQuery')
 }
 
 const clearSearchState = () => {
@@ -120,16 +76,6 @@ const clearSearchState = () => {
 }
 
 restoreSearchState()
-
-const setActiveTab = (tab) => {
-  activeTab.value = tab
-  sessionStorage.setItem('lastTab', tab)
-}
-
-const toggleTheme = () => {
-  isDark.value = !isDark.value
-  localStorage.setItem('isDark', JSON.stringify(isDark.value))
-}
 
 const toggleFavorite = (film) => {
   const isFavorite = favorites.value.some(fav => fav.filmId === film.filmId)

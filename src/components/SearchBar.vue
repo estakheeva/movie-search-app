@@ -34,16 +34,17 @@ import { useLocale } from '../composables/useLocale'
 const { t } = useLocale()
 
 // eslint-disable-next-line no-undef
-defineProps({
+const props = defineProps({
   loading: Boolean,
   error: String,
-  isDark: Boolean
+  isDark: Boolean,
+  initialQuery: String
 })
 
 // eslint-disable-next-line no-undef
 const emit = defineEmits(['search', 'clear'])
 
-const query = ref('')
+const query = ref(props.initialQuery || '')
 
 const clear = () => {
   query.value = ''

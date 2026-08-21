@@ -36,7 +36,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useLocale } from '../composables/useLocale'
+import { useTheme } from '../composables/useTheme'
 
-const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
+const { isDark } = useTheme()
+
 const { t } = useLocale()
 </script>
