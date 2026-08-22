@@ -31,9 +31,15 @@ export const useCollections = () => {
     return { success: true }
   }
 
+  const deleteCollection = (collectionId) => {
+    collections.value = collections.value.filter(c => c.id !== collectionId)
+    saveCollections()
+}
+
   return {
     collections,
     addCollection,
-    addMovieToCollection
+    addMovieToCollection,
+    deleteCollection
   }
 }

@@ -33,5 +33,8 @@
   "alreadyInCollection": "Уже в этой подборке",
   "rating": "Рейтинг",
   "duration": "Длительность",
-  "savedToCollection": "Добавлено в подборку"
+  "savedToCollection": "Добавлено в подборку",
+  "backToCollections": "Назад к списку",
+  "collectionEmpty": "В этой подборке пока нет фильмов",
+  "deleteCollection": "Удалить подборку"
 }

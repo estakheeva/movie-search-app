@@ -33,5 +33,8 @@
   "alreadyInCollection": "Already in this collection",
   "rating": "Rating",
   "duration": "Duration",
-  "savedToCollection": "Saved to collection"
+  "savedToCollection": "Saved to collection",
+  "backToCollections": "Back to collections",
+  "collectionEmpty": "No movies in this collection yet",
+  "deleteCollection": "Delete collection"
 }
