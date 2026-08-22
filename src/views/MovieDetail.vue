@@ -1,13 +1,12 @@
 <template>
-  <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
+  <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="p-4">
     
     <button @click="$router.back()" class="btn mb-4" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'">{{ t('back') }}</button>
     
-    <div v-if="loading" class="text-center py-5">
-      <div class="spinner-border text-warning">
-        <p class="text-warning mt-2">{{ t('loading') }}</p>
-      </div>
-    </div>
+    <div v-if="loading" class="text-center">
+      <div class="spinner-border text-warning"></div>
+      <p class="text-warning mt-2">{{ t('loading') }}</p>
+  </div>
     
     <div v-if="film" class="row">
       <div class="col-md-4 mb-3">
@@ -36,12 +35,14 @@
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useLocale } from '../composables/useLocale'
+import { useTheme } from '../composables/useTheme'
 
 const route = useRoute()
 const film = ref(null)
 const loading = ref(true)
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
-const isDark = ref(JSON.parse(localStorage.getItem('isDark') ?? 'true'))
+
+const { isDark } = useTheme()
 const { t } = useLocale()
 
 onMounted(async () => {

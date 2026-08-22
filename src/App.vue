@@ -1,6 +1,8 @@
 <template>
-  <AppNav :isDark="isDark" />
-  <router-view />
+  <div class="d-flex flex-column min-vh-100">
+    <AppNav :isDark="isDark" />
+    <router-view class="flex-grow-1" />
+  </div>
 </template>
 
 <script setup>

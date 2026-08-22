@@ -1,5 +1,5 @@
 <template>
-  <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="min-vh-100 p-4">
+  <div :class="isDark ? 'bg-dark text-white' : 'bg-light text-dark'" class="p-4">
     <div v-if="activeTab === 'search'">
       <SearchBar
         :loading="loading"
@@ -31,6 +31,10 @@
         @filmClick="goToFilm"
       />
     </div>
+
+    <div v-if="activeTab === 'collections'">
+      <CollectionsGrid :isDark="isDark" />
+    </div>
   </div>
 </template>
 
@@ -43,6 +47,7 @@ import { useTheme } from '../composables/useTheme'
 import SearchBar from '../components/SearchBar.vue'
 import MovieGrid from '../components/MovieGrid.vue'
 import FavoritesGrid from '../components/FavoritesGrid.vue'
+import CollectionsGrid from '../components/CollectionsGrid.vue'
 
 const { t } = useLocale()
 const router = useRouter()
@@ -56,6 +61,10 @@ const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
 const { isDark } = useTheme()
 const { activeTab, setActiveTab } = useTabs()
+
+window.addEventListener('beforeunload', () => {
+  clearSearchState()
+})
 
 const saveSearchState = (films, query) => {
   sessionStorage.setItem('lastMovies', JSON.stringify(films))

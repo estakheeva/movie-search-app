@@ -20,5 +20,12 @@
   "aboutLead": "Movie Search — a learning project for searching movies by title.",
   "whatItCan": "Features:",
   "technologies": "Technologies:",
-  "errorLoading": "Error loading data"
+  "errorLoading": "Error loading data",
+  "collections": "Collections",
+  "createCollection": "Create collection",
+  "collectionName": "Collection name",
+  "collectionDescription": "Description (optional)",
+  "save": "Save",
+  "cancel": "Cancel",
+  "noCollections": "No collections yet"
 }

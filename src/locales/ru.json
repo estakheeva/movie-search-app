@@ -21,5 +21,11 @@
   "whatItCan": "Что умеет:",
   "technologies": "Технологии:",
   "errorLoading": "Ошибка при загрузке данных",
-  "collections": "Подборки"
+  "collections": "Подборки",
+  "createCollection": "Создать подборку",
+  "collectionName": "Название подборки",
+  "collectionDescription": "Описание (необязательно)",
+  "save": "Сохранить",
+  "cancel": "Отмена",
+  "noCollections": "Пока нет подборок"
 }
