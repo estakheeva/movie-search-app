@@ -22,7 +22,28 @@
       </button>
       <h3>{{ selectedCollection.name }}</h3>
       <p v-if="selectedCollection.description" class="text-muted">{{ selectedCollection.description }}</p>
-      <p v-if="!selectedCollection.movies.length" class="mt-3">{{ t('collectionEmpty') }}</p>
+      
+      <div v-if="selectedCollection.movies.length" class="row mt-3">
+        <div v-for="movie in selectedCollection.movies" :key="movie.kinopoiskId" class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3">
+          <div class="card h-100" :class="isDark ? 'bg-secondary text-white' : 'bg-white text-dark border'">
+            <img
+              v-if="movie.posterUrlPreview && !movie.posterUrlPreview.includes('no-poster')"
+              :src="movie.posterUrlPreview"
+              class="card-img-top"
+              :alt="movie.nameRu || movie.nameEn"
+            />
+            <div v-else class="card-img-top d-flex align-items-center justify-content-center" :class="isDark ? 'bg-dark text-light' : 'bg-light text-dark'" style="height: 200px;">
+              <span>{{ t('noPoster') }}</span>
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{ movie.nameRu || movie.nameEn }}</h5>
+              <p class="card-text">{{ movie.year || t('yearNotSpecified') }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p v-else class="mt-3">{{ t('collectionEmpty') }}</p>
       <button class="btn btn-danger mt-3" @click="removeCollection">
         {{ t('deleteCollection') }}
       </button>
