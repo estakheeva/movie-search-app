@@ -27,5 +27,11 @@
   "collectionDescription": "Описание (необязательно)",
   "save": "Сохранить",
   "cancel": "Отмена",
-  "noCollections": "Пока нет подборок"
+  "noCollections": "Пока нет подборок",
+  "addToCollection": "Добавить в подборку",
+  "selectCollection": "Выберите подборку",
+  "alreadyInCollection": "Уже в этой подборке",
+  "rating": "Рейтинг",
+  "duration": "Длительность",
+  "savedToCollection": "Добавлено в подборку"
 }

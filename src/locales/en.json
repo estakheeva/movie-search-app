@@ -27,5 +27,11 @@
   "collectionDescription": "Description (optional)",
   "save": "Save",
   "cancel": "Cancel",
-  "noCollections": "No collections yet"
+  "noCollections": "No collections yet",
+  "addToCollection": "Add to collection",
+  "selectCollection": "Select collection",
+  "alreadyInCollection": "Already in this collection",
+  "rating": "Rating",
+  "duration": "Duration",
+  "savedToCollection": "Saved to collection"
 }

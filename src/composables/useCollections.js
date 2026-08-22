@@ -19,8 +19,21 @@ export const useCollections = () => {
     return newCollection
   }
 
+  const addMovieToCollection = (collectionId, movie) => {
+    const collection = collections.value.find(c => c.id === collectionId)
+    if (!collection) return { success: false, message: 'notFound' }
+
+    const exists = collection.movies.some(m => m.kinopoiskId === movie.kinopoiskId)
+    if (exists) return { success: false, message: 'alreadyExists' }
+
+    collection.movies.push(movie)
+    saveCollections()
+    return { success: true }
+  }
+
   return {
     collections,
-    addCollection
+    addCollection,
+    addMovieToCollection
   }
 }

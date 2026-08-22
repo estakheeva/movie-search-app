@@ -7,11 +7,13 @@
       </button>
     </div>
 
-    <div v-if="showForm" class="mb-4">
-      <input v-model="newName" class="form-control mb-2" :placeholder="t('collectionName')" />
-      <textarea v-model="newDescription" class="form-control mb-2" :placeholder="t('collectionDescription')"></textarea>
-      <button class="btn btn-primary me-2" @click="saveCollection">{{ t('save') }}</button>
-      <button class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'" @click="showForm = false">{{ t('cancel') }}</button>
+    <div v-if="showForm" class="mb-4 row justify-content-center">
+      <div class="col-12 col-md-6">
+        <input v-model="newName" class="form-control mb-2" :placeholder="t('collectionName')" />
+        <textarea v-model="newDescription" class="form-control mb-2" :placeholder="t('collectionDescription')"></textarea>
+        <button class="btn btn-primary me-2" @click="saveCollection">{{ t('save') }}</button>
+        <button class="btn" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'" @click="showForm = false">{{ t('cancel') }}</button>
+      </div>
     </div>
 
     <div v-if="collections.length">
