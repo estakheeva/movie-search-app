@@ -36,5 +36,6 @@
   "savedToCollection": "Saved to collection",
   "backToCollections": "Back to collections",
   "collectionEmpty": "No movies in this collection yet",
-  "deleteCollection": "Delete collection"
+  "deleteCollection": "Delete collection",
+  "editCollection": "Edit"
 }

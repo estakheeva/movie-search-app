@@ -36,10 +36,29 @@ export const useCollections = () => {
     saveCollections()
 }
 
+  const updateCollection = (collectionId, name, description) => {
+    const collection = collections.value.find(c => c.id === collectionId)
+    if(!collection) return
+
+    collection.name = name
+    collection.description = description
+    saveCollections()
+  } 
+
+  const removeMovieFromCollection = (collectionId, movieId) => {
+    const collection = collections.value.find(c => c.id === collectionId)
+    if(!collection) return
+    
+    collection.movies = collection.movies.filter(m => m.kinopoiskId !== movieId)   
+    saveCollections() 
+  }
+
   return {
     collections,
     addCollection,
     addMovieToCollection,
-    deleteCollection
+    deleteCollection,
+    updateCollection,
+    removeMovieFromCollection
   }
 }

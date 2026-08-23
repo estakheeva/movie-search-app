@@ -17,15 +17,25 @@
     </div>
 
     <div v-if="selectedCollection">
+      
       <button class="btn mb-3" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'" @click="selectedCollectionId = null">
         ← {{ t('backToCollections') }}
       </button>
+      <button class="btn mb-3 ms-3" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'" @click="openEditForm">{{ t('editCollection') }}</button>
+      
       <h3>{{ selectedCollection.name }}</h3>
-      <p v-if="selectedCollection.description" class="text-muted">{{ selectedCollection.description }}</p>
+      <p v-if="selectedCollection.description"  :class="isDark ? 'text-light' : 'text-muted'">{{ selectedCollection.description }}</p>
+      
+      <div v-if="isEditing" class="mt-3 mb-3">
+        <input v-model="editName" class="form-control mb-2" :placeholder="t('collectionName')" />
+        <textarea v-model="editDescription" class="form-control mb-2" :placeholder="t('collectionDescription')"></textarea>
+        <button class="btn btn-primary me-2" @click="saveEdit"> {{ t('save') }}</button>
+        <button class="btn btn-primary me-2" :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'" @click="cancelEdit"> {{ t('cancel') }}</button>
+      </div>
       
       <div v-if="selectedCollection.movies.length" class="row mt-3">
         <div v-for="movie in selectedCollection.movies" :key="movie.kinopoiskId" class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3">
-          <div class="card h-100" :class="isDark ? 'bg-secondary text-white' : 'bg-white text-dark border'">
+          <div class="card h-100 position-relative" :class="isDark ? 'bg-secondary text-white' : 'bg-white text-dark border'">
             <img
               v-if="movie.posterUrlPreview && !movie.posterUrlPreview.includes('no-poster')"
               :src="movie.posterUrlPreview"
@@ -37,6 +47,9 @@
             </div>
             <div class="card-body">
               <h5 class="card-title">{{ movie.nameRu || movie.nameEn }}</h5>
+              <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-2" @click="removeMovie(movie.kinopoiskId)">
+                ✕
+              </button>
               <p class="card-text">{{ movie.year || t('yearNotSpecified') }}</p>
             </div>
           </div>
@@ -79,12 +92,15 @@ import { useLocale } from '../composables/useLocale'
 import { useCollections } from '../composables/useCollections'
 
 const { t } = useLocale()
-const { collections, addCollection, deleteCollection } = useCollections()
+const { collections, addCollection, deleteCollection, updateCollection, removeMovieFromCollection } = useCollections()
 
 const showForm = ref(false)
 const newName = ref('')
 const newDescription = ref('')
 const selectedCollectionId = ref(null)
+const isEditing = ref(false)
+const editName = ref('')
+const editDescription = ref('')
 
 const saveCollection = () => {
   if (!newName.value.trim()) return
@@ -98,6 +114,28 @@ addCollection(newName.value.trim(), newDescription.value.trim())
 const selectedCollection = computed(() => {
   return collections.value.find(c => c.id === selectedCollectionId.value) || null
 })
+
+const openEditForm = () => {
+  if(!selectedCollection.value) return
+  editName.value = selectedCollection.value.name
+  editDescription.value = selectedCollection.value.description || ''
+  isEditing.value = true
+}
+
+const saveEdit = () => {
+  if(!selectedCollection.value || !editName.value.trim()) return
+  updateCollection(selectedCollection.value.id, editName.value.trim(), editDescription.value.trim())
+  isEditing.value = false
+}
+
+const cancelEdit = () => {
+  isEditing = false
+}
+
+const removeMovie = (movieId) => {
+  if(!selectedCollection.value) return
+  removeMovieFromCollection(selectedCollection.value.id, movieId)
+}
 
 const removeCollection = () => {
   if (selectedCollection.value) {

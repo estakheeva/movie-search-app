@@ -36,5 +36,6 @@
   "savedToCollection": "Добавлено в подборку",
   "backToCollections": "Назад к списку",
   "collectionEmpty": "В этой подборке пока нет фильмов",
-  "deleteCollection": "Удалить подборку"
+  "deleteCollection": "Удалить подборку",
+  "editCollection": "Редактировать"
 }
