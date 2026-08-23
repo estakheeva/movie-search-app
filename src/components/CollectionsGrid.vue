@@ -129,7 +129,7 @@ const saveEdit = () => {
 }
 
 const cancelEdit = () => {
-  isEditing = false
+  isEditing.value = false
 }
 
 const removeMovie = (movieId) => {
