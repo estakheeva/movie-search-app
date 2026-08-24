@@ -23,7 +23,16 @@ export const useCollections = () => {
     const collection = collections.value.find(c => c.id === collectionId)
     if (!collection) return { success: false, message: 'notFound' }
 
-    const exists = collection.movies.some(m => m.kinopoiskId === movie.kinopoiskId)
+    const exists = collection.movies.some(m => {
+      if (movie.filmId && m.filmId) {
+        return m.filmId === movie.filmId
+      }
+      if (movie.kinopoiskId && m.kinopoiskId) {
+        return m.kinopoiskId === movie.kinopoiskId
+      }
+      return false
+    })
+
     if (exists) return { success: false, message: 'alreadyExists' }
 
     collection.movies.push(movie)
@@ -31,34 +40,34 @@ export const useCollections = () => {
     return { success: true }
   }
 
-  const deleteCollection = (collectionId) => {
-    collections.value = collections.value.filter(c => c.id !== collectionId)
-    saveCollections()
-}
-
   const updateCollection = (collectionId, name, description) => {
     const collection = collections.value.find(c => c.id === collectionId)
-    if(!collection) return
+    if (!collection) return
 
     collection.name = name
     collection.description = description
     saveCollections()
-  } 
+  }
 
   const removeMovieFromCollection = (collectionId, movieId) => {
     const collection = collections.value.find(c => c.id === collectionId)
-    if(!collection) return
-    
-    collection.movies = collection.movies.filter(m => m.kinopoiskId !== movieId)   
-    saveCollections() 
+    if (!collection) return
+
+    collection.movies = collection.movies.filter(m => m.kinopoiskId !== movieId)
+    saveCollections()
+  }
+
+  const deleteCollection = (collectionId) => {
+    collections.value = collections.value.filter(c => c.id !== collectionId)
+    saveCollections()
   }
 
   return {
     collections,
     addCollection,
     addMovieToCollection,
-    deleteCollection,
     updateCollection,
-    removeMovieFromCollection
+    removeMovieFromCollection,
+    deleteCollection
   }
 }

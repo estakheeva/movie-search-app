@@ -4,7 +4,9 @@
       <div class="card bg-secondary text-white h-100" style="position: relative;">
         <button
           @click.stop="$emit('toggleFavorite', film)"
-          class="btn btn-sm btn-dark position-absolute top-0 end-0 m-2"
+          class="btn btn-sm position-absolute top-0 end-0 m-2"
+          :class="favorites.some(fav => fav.filmId === film.filmId) ? 'text-warning' : 'text-secondary'"
+          style="font-size: 1.5rem; background: transparent; border: none;"
         >
           {{ favorites.some(fav => fav.filmId === film.filmId) ? '★' : '☆' }}
         </button>
@@ -22,6 +24,31 @@
             <h5 class="card-title">{{ film.nameRu || film.nameEn }}</h5>
             <p class="card-text">{{ film.year || t('yearNotSpecified') }}</p>
           </div>
+          <button
+            @click.stop="toggleCollectionMenu(film)"
+            class="btn btn-sm position-absolute bottom-0 end-0 m-2 text-white"
+            style="background: transparent; border: none; font-size: 2rem; font-weight: bold; line-height: 1;"
+            title="Добавить в подборку"
+          >
+            +
+          </button>
+          
+          <div v-if="menuFilm && menuFilm.filmId === film.filmId" class="position-absolute bottom-0 start-0 end-0 p-2 bg-dark" style="z-index: 10;">
+            <div v-if="collections.length">
+              <button
+                v-for="collection in collections"
+                :key="collection.id"
+                class="btn btn-sm w-100 text-start text-white"
+                @click.stop="addToCollection(collection.id)"
+              >
+                {{ collection.name }}
+              </button>
+            </div>
+            <div v-else class="text-white small text-center">
+              {{ t('noCollections') }}
+            </div>
+          </div>
+          <p v-if="message && menuFilm && menuFilm.filmId === film.filmId" class="text-warning small mt-2">{{ message }}</p>
         </div>
       </div>
     </div>
@@ -29,9 +56,32 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { useCollections } from '../composables/useCollections'
+import { useTabs } from '../composables/useTabs'
 import { useLocale } from '../composables/useLocale'
 
 const { t } = useLocale()
+const { collections, addMovieToCollection } = useCollections()
+const { setActiveTab } = useTabs()
+const router = useRouter()
+const menuFilm = ref(null)
+const message = ref('')
+
+const toggleCollectionMenu = (film) => {
+  menuFilm.value = menuFilm.value?.filmId === film.filmId ? null : film
+}
+
+const addToCollection = (collectionId) => {
+  if (!menuFilm.value) return
+
+  const result = addMovieToCollection(collectionId, menuFilm.value)
+
+  if (result.success) {
+    menuFilm.value = null
+  }
+}
 
 // eslint-disable-next-line no-undef
 defineProps({
