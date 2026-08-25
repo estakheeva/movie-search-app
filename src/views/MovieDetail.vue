@@ -90,14 +90,20 @@ onMounted(async () => {
 
 const addToCollection = (collectionId) => {
   if (!film.value) return
-
   const result = addMovieToCollection(collectionId, film.value)
 
   if (result.success) {
     message.value = t('savedToCollection')
     showCollections.value = false
+    setTimeout(()=>{
+      message.value = ''
+    },3000)
   } else if (result.message === 'alreadyExists') {
-    message.value = t('alreadyInCollection')
+    message.value = `${t('alreadyInCollection')}: ${result.collectionName}`
+    showCollections.value = false
+    setTimeout(()=>{
+      message.value = ''
+    },3000)
   }
 }
 </script>

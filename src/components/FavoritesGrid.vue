@@ -9,7 +9,8 @@
         <button
           @click.stop="$emit('toggleFavorite', film)"
           class="btn btn-sm position-absolute top-0 end-0 m-2"
-          :class="isDark ? 'btn-dark' : 'btn-light border'"
+          :class="isDark ? 'text-warning' : 'btn-light border'"
+          style="font-size: 1.5rem; background: transparent; border: none;"
         >
           ★
         </button>

@@ -24,16 +24,22 @@ export const useCollections = () => {
     if (!collection) return { success: false, message: 'notFound' }
 
     const exists = collection.movies.some(m => {
-      if (movie.filmId && m.filmId) {
-        return m.filmId === movie.filmId
-      }
-      if (movie.kinopoiskId && m.kinopoiskId) {
-        return m.kinopoiskId === movie.kinopoiskId
-      }
-      return false
+      if (movie.filmId && m.filmId && Number(m.filmId) === Number(movie.filmId)) return true
+      if (movie.kinopoiskId && m.kinopoiskId && Number(m.kinopoiskId) === Number(movie.kinopoiskId)) return true
+
+      const movieName = (movie.nameRu || movie.nameEn || '').toLowerCase()
+      const mName = (m.nameRu || m.nameEn || '').toLowerCase()
+      const movieYear = movie.year ? String(movie.year) : ''
+      const mYear = m.year ? String(m.year) : ''
+
+      return movieName && movieName === mName && movieYear && movieYear === mYear
     })
 
-    if (exists) return { success: false, message: 'alreadyExists' }
+    if (exists) return { 
+      success: false, 
+      message: 'alreadyExists',
+      collectionName: collection.name
+    }
 
     collection.movies.push(movie)
     saveCollections()

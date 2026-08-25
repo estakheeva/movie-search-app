@@ -105,7 +105,7 @@ const editDescription = ref('')
 const saveCollection = () => {
   if (!newName.value.trim()) return
 
-addCollection(newName.value.trim(), newDescription.value.trim())
+  addCollection(newName.value.trim(), newDescription.value.trim())
   newName.value = ''
   newDescription.value = ''
   showForm.value = false

@@ -5,7 +5,7 @@
         <button
           @click.stop="$emit('toggleFavorite', film)"
           class="btn btn-sm position-absolute top-0 end-0 m-2"
-          :class="favorites.some(fav => fav.filmId === film.filmId) ? 'text-warning' : 'text-secondary'"
+          :class="favorites.some(fav => fav.filmId === film.filmId) ? 'text-warning' : 'text-white'"
           style="font-size: 1.5rem; background: transparent; border: none;"
         >
           {{ favorites.some(fav => fav.filmId === film.filmId) ? '★' : '☆' }}
@@ -48,7 +48,12 @@
               {{ t('noCollections') }}
             </div>
           </div>
-          <p v-if="message && menuFilm && menuFilm.filmId === film.filmId" class="text-warning small mt-2">{{ message }}</p>
+          <p 
+            v-if="message && menuFilm && menuFilm.filmId === film.filmId" 
+            class="text-warning small p-2 bg-dark position-absolute top-50 start-50 translate-middle"
+            style="z-index: 20; white-space: nowrap;">{{ message }}
+          </p>
+        
         </div>
       </div>
     </div>
@@ -70,16 +75,22 @@ const menuFilm = ref(null)
 const message = ref('')
 
 const toggleCollectionMenu = (film) => {
+  message.value = ''
   menuFilm.value = menuFilm.value?.filmId === film.filmId ? null : film
 }
 
 const addToCollection = (collectionId) => {
   if (!menuFilm.value) return
-
   const result = addMovieToCollection(collectionId, menuFilm.value)
 
   if (result.success) {
     menuFilm.value = null
+  } else if (result.message === 'alreadyExists') {
+    message.value = `${t('alreadyInCollection')}: ${result.collectionName} `
+    setTimeout(() => {
+      message.value = ''
+      menuFilm.value = null
+    }, 2000)
   }
 }
 
