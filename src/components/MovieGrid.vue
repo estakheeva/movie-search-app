@@ -47,6 +47,25 @@
             <div v-else class="text-white small text-center">
               {{ t('noCollections') }}
             </div>
+            <button 
+              class="btn btn-sm w-100 text-start text-white"
+              @click.stop="openCreateForm"
+              >
+                {{ t('createCollection') }}
+              </button>
+              <div v-if="showCreateForm" class="mt-2" @click.stop>
+                <input 
+                  v-model="newCollectionName"
+                  class="form-control form-control-sm mb-2"
+                  :placeholder="t('collectionName')" 
+                />
+                <button class="btn btn-sm btn-light text-dark me-2" @click.stop="saveNewCollection">
+                  {{ t('save') }}
+                </button>
+                <button class="btn btn-sm btn-outline-light" @click.stop="CancelCreateForm">
+                  {{ t('cancel') }}
+                </button>
+              </div>
           </div>
           <p 
             v-if="message && menuFilm && menuFilm.filmId === film.filmId" 
@@ -68,15 +87,36 @@ import { useTabs } from '../composables/useTabs'
 import { useLocale } from '../composables/useLocale'
 
 const { t } = useLocale()
-const { collections, addMovieToCollection } = useCollections()
+const { collections, addMovieToCollection, addCollection } = useCollections()
 const { setActiveTab } = useTabs()
 const router = useRouter()
 const menuFilm = ref(null)
 const message = ref('')
+const showCreateForm = ref(false)
+const newCollectionName = ref('')
 
 const toggleCollectionMenu = (film) => {
   message.value = ''
   menuFilm.value = menuFilm.value?.filmId === film.filmId ? null : film
+}
+
+const openCreateForm = () => {
+  showCreateForm.value = true
+}
+
+const CancelCreateForm = () => {
+  showCreateForm.value = false
+  newCollectionName.value = ''
+}
+
+const saveNewCollection = () => {
+  const name = newCollectionName.value.trim()
+  if(!name) return
+
+  addCollection(name, '')
+  showCreateForm.value = false
+  newCollectionName.value = ''
+  message.value = `${t('canAddToCollection')} "${name}"`
 }
 
 const addToCollection = (collectionId) => {
