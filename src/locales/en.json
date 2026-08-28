@@ -38,5 +38,6 @@
   "collectionEmpty": "No movies in this collection yet",
   "deleteCollection": "Delete collection",
   "editCollection": "Edit",
-  "canAddToCollection": "Now add the movie to the collection"
+  "canAddToCollection": "Now add the movie to the collection",
+  "addMovies": "Add a movie"
 }

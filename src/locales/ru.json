@@ -38,5 +38,6 @@
   "collectionEmpty": "В этой подборке пока нет фильмов",
   "deleteCollection": "Удалить подборку",
   "editCollection": "Редактировать",
-  "canAddToCollection": "Теперь добавьте фильм в подборку"
+  "canAddToCollection": "Теперь добавьте фильм в подборку",
+  "addMovies": "Добавьте фильм"
 }

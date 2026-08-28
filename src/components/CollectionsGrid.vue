@@ -62,27 +62,50 @@
       </button>
     </div>
 
-    <div v-else>
-      <div v-if="collections.length">
-        <div
-          v-for="collection in collections"
-          :key="collection.id"
-          class="card mb-2"
-          :class="isDark ? 'bg-secondary text-white' : 'bg-white text-dark border'"
-          style="cursor: pointer;"
-          @click="selectedCollectionId = collection.id"
-        >
-          <div class="card-body">
-            <h5 class="card-title">{{ collection.name }}</h5>
-            <p class="card-text" v-if="collection.description">{{ collection.description }}</p>
+   <div v-else>
+  <div v-if="collections.length" class="row">
+    <div
+      v-for="collection in collections"
+      :key="collection.id"
+      class="col-6 col-sm-4 col-lg-3 col-xl-2 mb-3"
+    >
+      <div
+        class="card h-100"
+        :class="isDark ? 'bg-secondary text-white' : 'bg-white text-dark border'"
+        style="cursor: pointer;"
+        @click="selectedCollectionId = collection.id"
+      >
+       <div class="row row-cols-2 g-0" style="aspect-ratio: 2/3; overflow: hidden;">
+          <div
+            v-for="i in 4"
+            :key="i"
+            class="col"
+            style="height: 50%; overflow: hidden;"
+          >
+            <img
+              v-if="collection.movies[i - 1]"
+              :src="collection.movies[i - 1].posterUrlPreview"
+              class="w-100 h-100"
+              style="object-fit: cover;"
+            />
+            <div
+              v-else
+              class="w-100 h-100 d-flex align-items-center justify-content-center"
+              style="background: linear-gradient(135deg, #e0f7fa, #b2dfdb);"
+            ></div>
           </div>
         </div>
-      </div>
-
-      <div v-else class="text-center py-5">
-        <p :class="isDark ? 'text-white' : 'text-dark'">{{ t('noCollections') }}</p>
+        <div class="card-body">
+          <h5 class="card-title">{{ collection.name }}</h5>
+        </div>
       </div>
     </div>
+  </div>
+
+  <div v-else class="text-center py-5">
+    <p :class="isDark ? 'text-white' : 'text-dark'">{{ t('noCollections') }}</p>
+  </div>
+</div>
   </div>
 </template>
 
