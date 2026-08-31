@@ -62,30 +62,6 @@ const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
 const { isDark } = useTheme()
 const { activeTab, setActiveTab } = useTabs()
 
-window.addEventListener('beforeunload', () => {
-  clearSearchState()
-})
-
-const saveSearchState = (films, query) => {
-  sessionStorage.setItem('lastMovies', JSON.stringify(films))
-  sessionStorage.setItem('lastQuery', query)
-}
-
-const restoreSearchState = () => {
-  const savedMovies = sessionStorage.getItem('lastMovies')
-  const savedQuery = sessionStorage.getItem('lastQuery')
-
-  if (savedMovies) movies.value = JSON.parse(savedMovies)
-  if (savedQuery) currentQuery.value = savedQuery
-}
-
-const clearSearchState = () => {
-  sessionStorage.removeItem('lastMovies')
-  sessionStorage.removeItem('lastQuery')
-}
-
-restoreSearchState()
-
 const toggleFavorite = (film) => {
   const isFavorite = favorites.value.some(fav => fav.filmId === film.filmId)
   if (isFavorite) {
@@ -119,7 +95,6 @@ const onSearch = async (query) => {
     const data = await fetchMovies(query, 1)
     if (data.films && data.films.length > 0) {
       movies.value = data.films
-      saveSearchState(data.films, query)
     } else {
       error.value = 'Ничего не найдено'
     }
@@ -137,7 +112,6 @@ const loadMore = async () => {
     const data = await fetchMovies(currentQuery.value, page.value)
     if (data.films && data.films.length > 0) {
       movies.value = [...movies.value, ...data.films]
-      saveSearchState(movies.value, currentQuery.value)
     }
   } catch (e) {
     error.value = 'Ошибка при загрузке'
@@ -151,7 +125,6 @@ const onClear = () => {
   error.value = ''
   page.value = 1
   currentQuery.value = ''
-  clearSearchState()
 }
 
 const goToFilm = (id) => {
