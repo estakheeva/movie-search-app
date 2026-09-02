@@ -4,9 +4,24 @@ import MovieDetail from '../views/MovieDetail.vue'
 import About from '../views/About.vue'
 
 const routes = [
-  { path: '/', component: Home },
-  { path: '/movie/:id', component: MovieDetail },
-  { path: '/about', component: About }
+  { 
+    path: '/', 
+    name: 'Home',
+    component: Home,
+    meta: { title: 'Search'}
+  },
+  { 
+    path: '/movie/:id', 
+    name: 'MovieDetail',
+    component: MovieDetail,
+    meta: { title: 'Movie Detail'} 
+  },
+  { 
+    path: '/about', 
+    name: 'About',
+    component: About,
+    meta: { title: 'About'} 
+  }
 ]
 
 export default createRouter({

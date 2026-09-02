@@ -10,8 +10,20 @@
 </template>
 
 <script setup>
+import { watch } from 'vue'
+import { useRoute } from 'vue-router'
 import AppNav from './components/AppNav.vue'
 import { useTheme } from './composables/useTheme'
 
 const { isDark } = useTheme()
+const route = useRoute()
+
+watch(
+  () => route.meta.title,
+  (newTitle) => {
+    document.title = newTitle ?  `${newTitle} | Movie Search` : 'Movie Search'
+  },
+  {immediate: true}
+)
+
 </script>
