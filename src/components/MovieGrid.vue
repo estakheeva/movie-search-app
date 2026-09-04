@@ -57,8 +57,10 @@
                 <input 
                   v-model="newCollectionName"
                   class="form-control form-control-sm mb-2"
+                  :class="{'is-invalid': collectionError }"
                   :placeholder="t('collectionName')" 
                 />
+                <p v-if="collectionError" class="text-danger small mb-2">{{ collectionError }}</p>
                 <button class="btn btn-sm btn-light text-dark me-2" @click.stop="saveNewCollection">
                   {{ t('save') }}
                 </button>
@@ -94,6 +96,7 @@ const menuFilm = ref(null)
 const message = ref('')
 const showCreateForm = ref(false)
 const newCollectionName = ref('')
+const collectionError = ref('')
 
 const toggleCollectionMenu = (film) => {
   message.value = ''
@@ -102,20 +105,26 @@ const toggleCollectionMenu = (film) => {
 
 const openCreateForm = () => {
   showCreateForm.value = true
+  collectionError.value = ''
 }
 
 const CancelCreateForm = () => {
   showCreateForm.value = false
   newCollectionName.value = ''
+  collectionError.value = ''
 }
 
 const saveNewCollection = () => {
   const name = newCollectionName.value.trim()
-  if(!name) return
+  if(!name) {
+    collectionError.value = t('enterCollectionName')
+    return
+  }
 
   addCollection(name, '')
   showCreateForm.value = false
   newCollectionName.value = ''
+  collectionError.value = ''
   message.value = `${t('canAddToCollection')} "${name}"`
 }
 

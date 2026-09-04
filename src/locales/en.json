@@ -39,5 +39,6 @@
   "deleteCollection": "Delete collection",
   "editCollection": "Edit",
   "canAddToCollection": "Now add the movie to the collection",
-  "addMovies": "Add a movie"
+  "addMovies": "Add a movie",
+  "enterCollectionName": "Enter collection name"
 }

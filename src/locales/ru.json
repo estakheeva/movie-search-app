@@ -39,5 +39,6 @@
   "deleteCollection": "Удалить подборку",
   "editCollection": "Редактировать",
   "canAddToCollection": "Теперь добавьте фильм в подборку",
-  "addMovies": "Добавьте фильм"
+  "addMovies": "Добавьте фильм",
+  "enterCollectionName": "Введите название подборки"
 }
