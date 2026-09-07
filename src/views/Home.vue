@@ -44,6 +44,7 @@ import { useRouter } from 'vue-router'
 import { useLocale } from '../composables/useLocale'
 import { useTabs } from '../composables/useTabs'
 import { useTheme } from '../composables/useTheme'
+import { useFavorites } from '../composables/useFavorites'
 import SearchBar from '../components/SearchBar.vue'
 import MovieGrid from '../components/MovieGrid.vue'
 import FavoritesGrid from '../components/FavoritesGrid.vue'
@@ -58,19 +59,9 @@ const error = ref('')
 const page = ref(1)
 const currentQuery = ref('')
 const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
-const favorites = ref(JSON.parse(localStorage.getItem('favorites') || '[]'))
 const { isDark } = useTheme()
 const { activeTab, setActiveTab } = useTabs()
-
-const toggleFavorite = (film) => {
-  const isFavorite = favorites.value.some(fav => fav.filmId === film.filmId)
-  if (isFavorite) {
-    favorites.value = favorites.value.filter(fav => fav.filmId !== film.filmId)
-  } else {
-    favorites.value.push(film)
-  }
-  localStorage.setItem('favorites', JSON.stringify(favorites.value))
-}
+const { favorites, toggleFavorite } = useFavorites()
 
 const fetchMovies = async (query, pageNum) => {
   const response = await fetch(`https://kinopoiskapiunofficial.tech/api/v2.1/films/search-by-keyword?keyword=${query}&page=${pageNum}`, {

@@ -5,10 +5,10 @@
         <button
           @click.stop="$emit('toggleFavorite', film)"
           class="btn btn-sm position-absolute top-0 end-0 m-2"
-          :class="favorites.some(fav => fav.filmId === film.filmId) ? 'text-warning' : 'text-white'"
+          :class="isFavorite(film.filmId || film.kinopoiskId) ? 'text-warning' : 'text-white'"
           style="font-size: 1.5rem; background: transparent; border: none;"
         >
-          {{ favorites.some(fav => fav.filmId === film.filmId) ? '★' : '☆' }}
+          {{ isFavorite(film.filmId || film.kinopoiskId) ? '★' : '☆' }}
         </button>
         <div @click="$emit('filmClick', film.filmId)" style="cursor: pointer;">
           <img
@@ -87,10 +87,12 @@ import { useRouter } from 'vue-router'
 import { useCollections } from '../composables/useCollections'
 import { useTabs } from '../composables/useTabs'
 import { useLocale } from '../composables/useLocale'
+import { useFavorites } from '../composables/useFavorites'
 
 const { t } = useLocale()
 const { collections, addMovieToCollection, addCollection } = useCollections()
 const { setActiveTab } = useTabs()
+const { isFavorite } = useFavorites()
 const router = useRouter()
 const menuFilm = ref(null)
 const message = ref('')

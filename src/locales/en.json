@@ -40,5 +40,7 @@
   "editCollection": "Edit",
   "canAddToCollection": "Now add the movie to the collection",
   "addMovies": "Add a movie",
-  "enterCollectionName": "Enter collection name"
+  "enterCollectionName": "Enter collection name",
+  "addToFavorites": "Add to favorites",
+  "removeFromFavorites": "Remove from favorites"
 }

@@ -40,5 +40,7 @@
   "editCollection": "Редактировать",
   "canAddToCollection": "Теперь добавьте фильм в подборку",
   "addMovies": "Добавьте фильм",
-  "enterCollectionName": "Введите название подборки"
+  "enterCollectionName": "Введите название подборки",
+  "addToFavorites": "В избранное",
+  "removeFromFavorites": "Убрать из избранного"
 }

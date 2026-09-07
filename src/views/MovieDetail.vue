@@ -33,6 +33,15 @@
             {{ t('addToCollection') }}
           </button>
 
+          <button 
+            v-if="film"
+            class="btn ms-2"
+            :class="isDark ? 'btn-outline-light' : 'btn-outline-dark'"
+            @click="toggleFavorite(film)"
+          >
+            {{ isFavorite(film.filmId || film.kinopoiskId) ? t('removeFromFavorites') : t('addToFavorites') }}
+          </button>
+
           <div v-if="showCollections" class="mt-2">
             <div v-if="collections.length">
               <button
@@ -63,6 +72,7 @@ import { useRoute } from 'vue-router'
 import { useLocale } from '../composables/useLocale'
 import { useTheme } from '../composables/useTheme'
 import { useCollections } from '../composables/useCollections'
+import { useFavorites } from '../composables/useFavorites'
 
 const route = useRoute()
 const film = ref(null)
@@ -72,6 +82,7 @@ const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 const { isDark } = useTheme()
 const { t } = useLocale()
 const { collections, addMovieToCollection } = useCollections()
+const { toggleFavorite, isFavorite } = useFavorites()
 const showCollections = ref(false)
 const message = ref('')
 
