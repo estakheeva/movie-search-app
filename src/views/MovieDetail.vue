@@ -9,7 +9,7 @@
     </div>
     
     <div v-if="film" class="row">
-      <div class="col-md-4 mb-3">
+      <div class="col-md-3 mb-3">
         <img
           v-if="film.posterUrl && !film.posterUrl.includes('no-poster')"
           :src="film.posterUrl"
@@ -20,7 +20,7 @@
         </div>
       </div>
       
-      <div class="col-md-8">
+      <div class="col-md-9">
         <h2>{{ film.nameRu || film.nameEn }}</h2>
         <p class="text-muted">{{ film.year }} • {{ film.genres?.map(g => g.genre).join(', ') }}</p>
         <p v-if="film.description" class="mt-3">{{ film.description }}</p>
