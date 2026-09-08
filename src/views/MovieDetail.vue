@@ -57,6 +57,27 @@
             <div v-else class="text-muted">
               {{ t('noCollections') }}
             </div>
+
+            <button
+              class="btn w-100 text-start"
+              :class="isDark ? 'text-white bg-dark' : 'text-dark bg-white'"
+              @click="openCreateForm"
+              >
+              {{ t('createCollection') }}
+            </button>
+
+            <div v-if="showCreateForm" class="mt-2">
+              <input 
+                v-model="newCollectionName"
+                class="form-control form-control-sm mb-2"
+                :class="{'is-invalid':collectionError}"
+                :placeholder="t('collectionName')"
+                >
+                <p v-if="collectionError" class="text-danger small mb-2">{{ collectionError }}</p>
+                <button class="btn btn-sm btn-light text-dark me-2" @click="saveNewCollection">{{ t('save') }}</button>
+                <button class="btn btn-sm btn-outline-light" @click="cancelCreateForm">{{ t('cancel') }}</button>
+            </div>
+
           </div>
 
           <p v-if="message" class="mt-2">{{ message }}</p>
@@ -81,9 +102,12 @@ const apiKey = '335a516b-35b5-4740-b827-f1443f969811'
 
 const { isDark } = useTheme()
 const { t } = useLocale()
-const { collections, addMovieToCollection } = useCollections()
+const { collections, addMovieToCollection, addCollection } = useCollections()
 const { toggleFavorite, isFavorite } = useFavorites()
 const showCollections = ref(false)
+const showCreateForm = ref(false)
+const newCollectionName = ref('')
+const collectionError = ref('')
 const message = ref('')
 
 onMounted(async () => {
@@ -116,5 +140,28 @@ const addToCollection = (collectionId) => {
       message.value = ''
     },3000)
   }
+}
+
+const openCreateForm = () => {
+  showCreateForm.value = true
+  collectionError.value = ''
+}
+
+const cancelCreateForm = () => {
+  showCreateForm.value = false
+  newCollectionName.value = ''
+  collectionError.value = ''
+}
+
+const saveNewCollection = () => {
+  const name = newCollectionName.value.trim()
+  if(!name) {
+    collectionError.value = t('enterCollectionName')
+    return
+  } 
+  addCollection(name, '')
+  newCollectionName.value = ''
+  collectionError.value = ''
+  showCreateForm.value = false
 }
 </script>
